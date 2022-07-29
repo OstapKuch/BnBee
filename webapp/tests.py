@@ -6,8 +6,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from .models.user import User
-from .repositories import UserRepository, UserNotFoundError
 from .application import app
+from .repositories.userRepository import UserRepository, UserNotFoundError
 
 
 @pytest.fixture
