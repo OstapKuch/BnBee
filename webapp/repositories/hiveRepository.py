@@ -1,7 +1,6 @@
 from contextlib import AbstractContextManager
 from typing import Callable, Iterator
 
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from webapp.models.apiary import Apiary

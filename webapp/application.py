@@ -1,6 +1,7 @@
 """Application module."""
 
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from .containers import Container
 from .endpoints.apiaryRouter import apiary_router
@@ -17,6 +18,11 @@ def create_app() -> FastAPI:
     db.create_database()
 
     app = FastAPI()
+    app.add_middleware(CORSMiddleware,
+                       allow_origins=["*"],
+                       allow_credentials=True,
+                       allow_methods=["*"],
+                       allow_headers=["*"], )
     app.container = container
     app.include_router(user_router, tags=["users"])
     app.include_router(apiary_router, tags=["apiaries"])

@@ -2,8 +2,10 @@ from contextlib import AbstractContextManager
 from datetime import datetime
 from typing import Callable, Iterator
 
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
+from webapp.models.hive import Hive
 from webapp.models.statistics import Statistics
 from webapp.repositories.notFoundError import NotFoundError
 
@@ -33,6 +35,16 @@ class StatisticRepository:
                                                     Statistics.datetime < end_date).all()
             if not stat:
                 raise StatisticsNotFoundError(hive_id)
+            return stat
+
+    def get_latest_stat_by_apiary(self, apiary_id: int) -> Statistics:
+        with self.session_factory() as session:
+            stat = session.query(Statistics, func.max(Statistics.datetime))\
+                .group_by(Statistics.hive_id)\
+                .join(Hive).filter(Statistics.hive_id == Hive.id, Hive.apiary_id == apiary_id).all()
+
+            if not stat:
+                raise StatisticsNotFoundError(apiary_id)
             return stat
 
     def add(self, hive_id: int, temperature: float, humidity: float, weight: float, avr_sound: float,

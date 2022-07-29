@@ -28,6 +28,18 @@ def get_by_id(
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
 
+@statistic_router.get("/statistic/latest/{apiary_id}")
+@inject
+def get_by_id(
+        apiary_id: int,
+        statistic_service: StatisticService = Depends(Provide[Container.statistic_service]),
+):
+    try:
+        return statistic_service.get_latest_stat_by_apiary(apiary_id)
+    except NotFoundError:
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+
 @statistic_router.get("/statistic/{hive_id}/{date_range}")
 @inject
 def get_by_date_range(
